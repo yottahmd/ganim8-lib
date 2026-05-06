@@ -1,6 +1,9 @@
 package ganim8
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/colorm"
+)
 
 // DrawOptions represents the option for Sprite.Draw().
 // For shortcut, DrawOpts() function can be used.
@@ -9,8 +12,8 @@ type DrawOptions struct {
 	Rotate           float64
 	ScaleX, ScaleY   float64
 	OriginX, OriginY float64
-	ColorM           ebiten.ColorM
-	CompositeMode    ebiten.CompositeMode
+	ColorM           colorm.ColorM
+	Blend            ebiten.Blend
 }
 
 // SetPos sets the position of the sprite.
@@ -46,7 +49,7 @@ func (drawOpts *DrawOptions) Reset() {
 	drawOpts.OriginX = 0
 	drawOpts.OriginY = 0
 	drawOpts.ColorM.Reset()
-	drawOpts.CompositeMode = ebiten.CompositeModeSourceOver
+	drawOpts.Blend = ebiten.BlendSourceOver
 }
 
 // ResetValues resets the DrawOptions to default values
@@ -92,14 +95,14 @@ func DrawOpts(x, y float64, args ...float64) *DrawOptions {
 		r = args[0]
 	}
 	return &DrawOptions{
-		X:             x,
-		Y:             y,
-		Rotate:        r,
-		ScaleX:        sx,
-		ScaleY:        sy,
-		OriginX:       ox,
-		OriginY:       oy,
-		ColorM:        ebiten.ColorM{},
-		CompositeMode: ebiten.CompositeModeSourceOver,
+		X:       x,
+		Y:       y,
+		Rotate:  r,
+		ScaleX:  sx,
+		ScaleY:  sy,
+		OriginX: ox,
+		OriginY: oy,
+		ColorM:  colorm.ColorM{},
+		Blend:   ebiten.BlendSourceOver,
 	}
 }
