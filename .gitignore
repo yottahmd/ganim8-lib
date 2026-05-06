@@ -19,3 +19,6 @@ Mobile.framework
 
 # Mac
 .DS_Store
+
+# IntelliJ
+.idea

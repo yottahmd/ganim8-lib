@@ -4,6 +4,7 @@ import (
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/colorm"
 	"golang.org/x/exp/rand"
 )
 
@@ -25,7 +26,7 @@ type Sprite struct {
 	sizeF              SpriteSizeF
 	length             int
 	flippedH, flippedV bool
-	op                 *ebiten.DrawImageOptions
+	op                 *colorm.DrawImageOptions
 	shaderOp           *ebiten.DrawRectShaderOptions
 }
 
@@ -48,7 +49,7 @@ func NewSprite(img *ebiten.Image, frames []*image.Rectangle) *Sprite {
 		length:    len(frames),
 		size:      size,
 		sizeF:     sizeF,
-		op:        &ebiten.DrawImageOptions{},
+		op:        &colorm.DrawImageOptions{},
 		shaderOp:  &ebiten.DrawRectShaderOptions{},
 	}
 }
@@ -131,8 +132,7 @@ func (spr *Sprite) Draw(screen *ebiten.Image, index int, opts *DrawOptions) {
 
 	op := spr.op
 	op.GeoM.Reset()
-	op.ColorM = opts.ColorM
-	op.CompositeMode = opts.CompositeMode
+	op.Blend = opts.Blend
 
 	if spr.flippedH {
 		sx = sx * -1
@@ -155,10 +155,10 @@ func (spr *Sprite) Draw(screen *ebiten.Image, index int, opts *DrawOptions) {
 		op.GeoM.Translate(w*ox, h*oy)
 	}
 
-	op.GeoM.Translate((x - w*ox), (y - h*oy))
+	op.GeoM.Translate(x-w*ox, y-h*oy)
 
 	subImage := spr.subImages[index]
-	screen.DrawImage(subImage, op)
+	colorm.DrawImage(screen, subImage, opts.ColorM, op)
 }
 
 // DrawWithShader draws the current frame with the specified options.
@@ -171,7 +171,7 @@ func (spr *Sprite) DrawWithShader(screen *ebiten.Image, index int, opts *DrawOpt
 
 	op := spr.shaderOp
 	op.GeoM.Reset()
-	op.CompositeMode = opts.CompositeMode
+	op.Blend = opts.Blend
 	op.Uniforms = shaderOpts.Uniforms
 
 	if r != 0 {
@@ -193,7 +193,7 @@ func (spr *Sprite) DrawWithShader(screen *ebiten.Image, index int, opts *DrawOpt
 		op.GeoM.Translate(w*ox, h*oy)
 	}
 
-	op.GeoM.Translate((x - w*ox), (y - h*oy))
+	op.GeoM.Translate(x-w*ox, y-h*oy)
 
 	subImage := spr.subImages[index]
 	op.Images[0] = subImage
@@ -205,7 +205,7 @@ func (spr *Sprite) DrawWithShader(screen *ebiten.Image, index int, opts *DrawOpt
 
 func (spr *Sprite) Clone() *Sprite {
 	s := *spr
-	s.op = &ebiten.DrawImageOptions{}
+	s.op = &colorm.DrawImageOptions{}
 	s.shaderOp = &ebiten.DrawRectShaderOptions{}
 	return &s
 }
