@@ -84,6 +84,11 @@ func (spr *Sprite) Length() int {
 	return spr.length
 }
 
+// Frame returns the frame image at the specified index.
+func (spr *Sprite) Frame(index int) *ebiten.Image {
+	return spr.subImages[index]
+}
+
 // RandomIndex returns random index of the sprite
 func (spr *Sprite) RandomIndex() int {
 	return rand.Intn(spr.length)

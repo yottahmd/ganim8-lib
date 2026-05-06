@@ -323,3 +323,49 @@ func TestPauseAtStart(t *testing.T) {
 		})
 	}
 }
+
+func TestSpriteFrame(t *testing.T) {
+	img := ebiten.NewImage(64, 16)
+	frames := frameRects(4)
+	spr := ganim8.NewSprite(img, frames)
+
+	got := spr.Frame(2)
+	want := image.Rect(32, 0, 48, 16)
+	if !got.Bounds().Eq(want) {
+		t.Errorf("got %v; want %v", got.Bounds(), want)
+	}
+}
+
+func TestAnimationFrame(t *testing.T) {
+	img := ebiten.NewImage(64, 16)
+	anim := ganim8.New(img, frameRects(4), time.Second, ganim8.Nop)
+	anim.GoToFrame(3)
+
+	got := anim.Frame()
+	want := image.Rect(32, 0, 48, 16)
+	if !got.Bounds().Eq(want) {
+		t.Errorf("got %v; want %v", got.Bounds(), want)
+	}
+}
+
+func TestStateFrame(t *testing.T) {
+	img := ebiten.NewImage(64, 16)
+	anim := ganim8.New(img, frameRects(4), time.Second, ganim8.Nop)
+	state := ganim8.NewState(anim)
+	state.GoToFrame(2)
+
+	got := state.Frame()
+	want := image.Rect(16, 0, 32, 16)
+	if !got.Bounds().Eq(want) {
+		t.Errorf("got %v; want %v", got.Bounds(), want)
+	}
+}
+
+func frameRects(n int) []*image.Rectangle {
+	result := make([]*image.Rectangle, n)
+	for i := 0; i < n; i++ {
+		r := image.Rect(i*16, 0, (i+1)*16, 16)
+		result[i] = &r
+	}
+	return result
+}

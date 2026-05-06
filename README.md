@@ -135,6 +135,14 @@ animation.UpdateWithDelta(delta)
 animation.Draw(screen, ganim8.DrawOpts(x,y, angle, sx, sy, ox, oy))
 ```
 
+If you want to draw the current frame yourself, use `Frame()`:
+
+```go
+op := &ebiten.DrawImageOptions{}
+op.GeoM.Translate(x, y)
+screen.DrawImage(animation.Frame(), op)
+```
+
 ```go
 animation.GoToFrame(frame)
 ```

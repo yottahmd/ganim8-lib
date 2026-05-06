@@ -75,6 +75,11 @@ func (state *State) Timer() time.Duration {
 	return state.timer
 }
 
+// Frame returns the current frame image.
+func (state *State) Frame() *ebiten.Image {
+	return state.Reference.sprite.Frame(state.position)
+}
+
 // GoToFrame sets the position of the animation state and
 // sets the timer at the start of the frame.
 func (state *State) GoToFrame(position int) {

@@ -288,6 +288,11 @@ func (anim *Animation) Sprite() *Sprite {
 	return anim.sprite
 }
 
+// Frame returns the current frame image.
+func (anim *Animation) Frame() *ebiten.Image {
+	return anim.sprite.Frame(anim.position)
+}
+
 // GoToFrame sets the position of the animation and
 // sets the timer at the start of the frame.
 func (anim *Animation) GoToFrame(position int) {
